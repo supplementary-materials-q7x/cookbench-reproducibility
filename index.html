@@ -1,0 +1,151 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="Anonymous reproducibility documentation for the CookBench environment and experiment workflow.">
+    <title>Anonymous CookBench Reproducibility Appendix</title>
+    <style>
+      :root { --ink:#16232d; --muted:#5b6871; --paper:#fcfcfa; --line:#dce2e4; --accent:#146b73; --soft:#edf7f6; --code:#10232b; }
+      * { box-sizing:border-box; }
+      body { margin:0; font:16px/1.6 Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif; color:var(--ink); background:var(--paper); }
+      header { color:white; background:linear-gradient(120deg,#103f49,#146b73 60%,#319494); padding:76px 24px 62px; }
+      .wrap { width:min(1040px,100%); margin:0 auto; }
+      .eyebrow { margin:0 0 14px; color:#bdeeee; font-weight:700; letter-spacing:.09em; text-transform:uppercase; font-size:.76rem; }
+      h1 { max-width:850px; margin:0; font-size:clamp(2rem,6vw,4.25rem); line-height:1.08; letter-spacing:-.04em; }
+      .lead { max-width:780px; margin:24px 0 0; font-size:1.16rem; color:#e0f9f8; }
+      main { padding:42px 24px 72px; }
+      section { margin:0 0 52px; scroll-margin-top:16px; }
+      h2 { margin:0 0 14px; font-size:1.65rem; line-height:1.2; letter-spacing:-.02em; }
+      h3 { margin:0 0 8px; font-size:1.05rem; }
+      p { max-width:900px; }
+      a { color:#075f68; font-weight:650; }
+      .notice { border-left:5px solid var(--accent); background:var(--soft); padding:18px 20px; border-radius:0 8px 8px 0; }
+      .grid { display:grid; grid-template-columns:repeat(3,1fr); gap:16px; }
+      .card { border:1px solid var(--line); background:white; border-radius:12px; padding:20px; }
+      .card p { margin:6px 0 0; color:var(--muted); }
+      .step { display:grid; grid-template-columns:42px 1fr; gap:14px; margin:18px 0; }
+      .num { width:34px; height:34px; border-radius:50%; display:grid; place-items:center; background:#d8efed; color:#075f68; font-weight:800; }
+      code { padding:.1em .34em; border-radius:4px; background:#edf0f1; font-family:ui-monospace,Consolas,monospace; font-size:.88em; }
+      pre { overflow:auto; padding:18px; border-radius:10px; color:#e6f5f5; background:var(--code); font:13px/1.55 ui-monospace,Consolas,monospace; }
+      pre code { padding:0; background:transparent; }
+      .gallery { display:grid; grid-template-columns:repeat(2,1fr); gap:18px; }
+      figure { margin:0; border:1px solid var(--line); padding:10px; background:#fff; border-radius:10px; }
+      img { display:block; width:100%; height:auto; border-radius:5px; }
+      figcaption { color:var(--muted); font-size:.9rem; padding:8px 4px 0; }
+      table { width:100%; border-collapse:collapse; background:white; font-size:.94rem; }
+      th, td { padding:12px; text-align:left; border:1px solid var(--line); vertical-align:top; }
+      th { background:#edf7f6; }
+      .download { display:inline-block; margin-top:4px; padding:11px 16px; border-radius:7px; background:var(--accent); color:white; text-decoration:none; }
+      footer { border-top:1px solid var(--line); padding:30px 24px 48px; color:var(--muted); font-size:.9rem; }
+      @media (max-width:720px) { .grid,.gallery { grid-template-columns:1fr; } header { padding-top:52px; } th,td { padding:9px; } }
+    </style>
+  </head>
+  <body>
+    <header>
+      <div class="wrap">
+        <p class="eyebrow">Anonymous supplementary material</p>
+        <h1>CookBench environment and experiment reproducibility</h1>
+        <p class="lead">A public, step-by-step record of the Windows environment integration, run workflow, and release boundaries used for CookBench.</p>
+      </div>
+    </header>
+
+    <main class="wrap">
+      <section class="notice" aria-label="Anonymity note">
+        <strong>Anonymous-release note.</strong> This page intentionally omits author names, affiliations, personal paths, private repositories, service credentials, and account identifiers. It documents only artifacts and steps needed to reproduce the environment-side setup.
+      </section>
+
+      <section>
+        <h2>What this appendix establishes</h2>
+        <div class="grid">
+          <article class="card"><h3>Inspectable setup</h3><p>Concrete prerequisites, file destinations, versioned integration files, verification controls, and runtime settings are listed below.</p></article>
+          <article class="card"><h3>Executable workflow</h3><p>The page records how to create a local environment, run an episode, resume an interrupted episode, and collect evaluation feedback.</p></article>
+          <article class="card"><h3>Clear boundaries</h3><p>Original benchmark artifacts are separable from commercial game assets, external model APIs, and user-owned credentials.</p></article>
+        </div>
+      </section>
+
+      <section>
+        <h2>Release boundary and public artifacts</h2>
+        <table>
+          <thead><tr><th>Artifact</th><th>Availability / boundary</th></tr></thead>
+          <tbody>
+            <tr><td>Environment-integration package</td><td>Included on this page: the integration binary and name-mapping files needed for the documented game-side setup.</td></tr>
+            <tr><td>Benchmark code and experiment artifacts</td><td>Publish in the accompanying anonymous code artifact: task definitions, prompts, action interface, EPM/world-adapter code, evaluation scripts, and permitted logs.</td></tr>
+            <tr><td>Cooking Simulator and Food Network DLC</td><td>Commercial dependencies. Each reproducer obtains these separately from the official distributor; they are not redistributed here.</td></tr>
+            <tr><td>Closed or hosted model APIs</td><td>External services. Reproduction requires the stated model identifier and access available to the reproducer; no API key is included or requested by this page.</td></tr>
+          </tbody>
+        </table>
+        <p><a class="download" href="downloads/cookbench-environment-integration.zip">Download environment-integration capsule</a> <a class="download" href="integration-package/CS_CamDump.dll">Download CS_CamDump.dll directly</a></p>
+        <p><small>Integration version: <code>20260430.1906</code>. SHA-256 checksums are included in <code>SHA256SUMS.txt</code> inside the download.</small></p>
+        <p><small>The public anonymous code-artifact URL should be added here before this page is linked in the rebuttal. Do not link a private repository, a personal profile, or a repository with identifying commit history.</small></p>
+      </section>
+
+      <section>
+        <h2>Prerequisites</h2>
+        <div class="grid">
+          <article class="card"><h3>Operating system</h3><p>Windows with a primary display configured at 100% scaling. Place the game window on the primary display for consistent screen capture.</p></article>
+          <article class="card"><h3>Game dependency</h3><p>Cooking Simulator plus Food Network DLC, installed through the official distributor. Use a local Sandbox session in the Classic kitchen scene.</p></article>
+          <article class="card"><h3>Software environment</h3><p>Python 3.10 with Conda; an editor such as VS Code is optional. Install MelonLoader version 0.5.7 from the official source.</p></article>
+        </div>
+      </section>
+
+      <section>
+        <h2>Game-side installation</h2>
+        <div class="step"><span class="num">1</span><div><strong>Install the loader.</strong> Install <a href="https://melonloader.co/download/">MelonLoader 0.5.7</a> for the locally licensed Cooking Simulator installation.</div></div>
+        <div class="step"><span class="num">2</span><div><strong>Install the integration files.</strong> Copy <code>CS_CamDump.dll</code> to <code>&lt;Cooking Simulator&gt;/Mods/</code>. Copy <code>item_name_mapping.txt</code> and <code>object_en_ch_mapping.txt</code> to <code>&lt;Cooking Simulator&gt;/UserData/</code>.</div></div>
+        <div class="step"><span class="num">3</span><div><strong>Verify the integration.</strong> Start the game, press <code>F12</code> to toggle real-time object monitoring, and press <code>F10</code> to toggle the text overlay. The on-screen overlay confirms that the game-side component is loaded.</div></div>
+        <div class="step"><span class="num">4</span><div><strong>Fix the scenario.</strong> Start a new Sandbox session in the Classic kitchen scene and apply the documented game settings before each run.</div></div>
+      </section>
+
+      <section>
+        <h2>Visual setup evidence</h2>
+        <div class="gallery">
+          <figure><img src="assets/mod-overlay.png" alt="Cooking Simulator screen showing the object-monitoring overlay."><figcaption>Verification overlay after toggling the integration controls.</figcaption></figure>
+          <figure><img src="assets/game-settings-overview.png" alt="Cooking Simulator game settings overview."><figcaption>Representative game-settings overview used before an episode.</figcaption></figure>
+          <figure><img src="assets/game-settings-details.png" alt="Cooking Simulator detailed game settings."><figcaption>Representative detailed settings panel.</figcaption></figure>
+          <figure><img src="assets/evaluation-screen.png" alt="Cooking Simulator evaluation interface."><figcaption>Evaluation interface from which episode feedback is captured.</figcaption></figure>
+        </div>
+      </section>
+
+      <section>
+        <h2>Python environment and local configuration</h2>
+        <pre><code>conda create -n cookbench python=3.10
+conda activate cookbench
+# Run from the repository root (the parent directory of epm/)
+pip install -e ./epm</code></pre>
+        <p>Use local-only configuration templates (for example, <code>common.local.example.json</code> copied to <code>common.local.json</code>) for machine-specific paths and service credentials. Local configuration files must stay untracked. This page never embeds API keys, email passwords, or private endpoint URLs.</p>
+      </section>
+
+      <section>
+        <h2>Episode execution and recovery</h2>
+        <p>The following commands illustrate the published runner interface. The accompanying anonymous code artifact should pin the exact configuration files, model identifiers, prompts, and evaluation revision used for a result.</p>
+        <pre><code># One dish with a selected agent configuration
+python epm/scripts/run_episode_dashboard.py \
+  --config epm/configs/pipelines/planner_executor.json \
+  --dish-id 1
+
+# Resume the most recent compatible run and refresh its memory state
+python epm/scripts/run_episode_dashboard.py \
+  --config epm/configs/pipelines/planner_executor.json \
+  --dish-id 1 --resume --refresh-memory
+
+# Run a specified batch sequentially
+python epm/scripts/run_episode_dashboard.py \
+  --config epm/configs/pipelines/reflexion.json \
+  --dish-range 1-20,41-60 --auto-chain</code></pre>
+        <p>Each run should retain its trajectory, screenshots/logs, configuration snapshot, evaluation output, and timing information in its run directory. If an episode reaches the game evaluation interface but feedback was not recorded, capture the feedback with the released collection script and verify that the dish identifier matches the evaluated dish.</p>
+      </section>
+
+      <section>
+        <h2>Reproduction checklist</h2>
+        <div class="grid">
+          <article class="card"><h3>Before running</h3><p>Record OS, game version/DLC, loader version, integration-package checksum, screen scaling, configuration revision, and model/provider access date.</p></article>
+          <article class="card"><h3>For every episode</h3><p>Save the dish ID, framework/configuration, prompt-ablation choice if applicable, trajectory, runtime log, screenshot evidence, and evaluation output.</p></article>
+          <article class="card"><h3>When reporting</h3><p>Separate released author-created artifacts from commercial simulator dependencies and external model APIs. Report provider defaults and unresolved randomness rather than implying deterministic replay.</p></article>
+        </div>
+      </section>
+    </main>
+
+    <footer><div class="wrap">Anonymous reproducibility appendix · Static HTML with no analytics, trackers, external fonts, author metadata, or credential-bearing content.</div></footer>
+  </body>
+</html>

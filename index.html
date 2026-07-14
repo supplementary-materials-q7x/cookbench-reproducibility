@@ -104,14 +104,14 @@
         <h2>Game-side installation</h2>
         <div class="step"><span class="num">1</span><div><strong>Install the loader.</strong> Install <a href="https://melonloader.co/download/">MelonLoader 0.5.7</a> for the locally licensed Cooking Simulator installation.</div></div>
         <div class="step"><span class="num">2</span><div><strong>Install the integration files.</strong> Copy <code>CS_CamDump.dll</code> to <code>&lt;Cooking Simulator&gt;/Mods/</code>. Copy <code>item_name_mapping.txt</code> and <code>object_en_ch_mapping.txt</code> to <code>&lt;Cooking Simulator&gt;/UserData/</code>.</div></div>
-        <div class="step"><span class="num">3</span><div><strong>Verify the integration.</strong> Start the game, press <code>F12</code> to toggle real-time object monitoring, and press <code>F10</code> to toggle the text overlay. The on-screen overlay confirms that the game-side component is loaded.</div></div>
+        <div class="step"><span class="num">3</span><div><strong>Verify the integration.</strong> Start the game and press <code>F12</code> to start or stop the real-time scene scanner. Pick up and move an object: its colored position marker should move with it. Press <code>F10</code> to show or hide the position/diagnostic visualization; it is useful for setup validation and can remain hidden during a timed episode.</div></div>
         <div class="step"><span class="num">4</span><div><strong>Fix the scenario.</strong> Start a new Sandbox session in the Classic kitchen scene and apply the documented game settings before each run.</div></div>
       </section>
 
       <section>
         <h2>Visual setup evidence</h2>
         <div class="gallery">
-          <figure><img src="assets/mod-overlay.png" alt="Cooking Simulator screen showing the object-monitoring overlay."><figcaption>Verification overlay after toggling the integration controls.</figcaption></figure>
+          <figure><img src="assets/mod-overlay.png" alt="Cooking Simulator screen showing the real-time object-position overlay."><figcaption><strong>Figure 1.</strong> Scene-scanner validation. Press <code>F12</code> to enable real-time object-position scanning; the colored markers should track moved objects. Press <code>F10</code> to toggle this diagnostic visualization.</figcaption></figure>
           <figure><img src="assets/game-settings-overview.png" alt="Cooking Simulator game settings overview."><figcaption>Representative game-settings overview used before an episode.</figcaption></figure>
           <figure><img src="assets/game-settings-details.png" alt="Cooking Simulator detailed game settings."><figcaption>Representative detailed settings panel.</figcaption></figure>
           <figure><img src="assets/evaluation-screen.png" alt="Cooking Simulator evaluation interface."><figcaption>Evaluation interface from which episode feedback is captured.</figcaption></figure>
@@ -123,28 +123,94 @@
         <pre><code>conda create -n cookbench python=3.10
 conda activate cookbench
 # Run from the repository root (the parent directory of epm/)
-pip install -e ./epm</code></pre>
-        <p>Use local-only configuration templates (for example, <code>common.local.example.json</code> copied to <code>common.local.json</code>) for machine-specific paths and service credentials. Local configuration files must stay untracked. This page never embeds API keys, email passwords, or private endpoint URLs.</p>
+pip install -e ./epm
+# Alternative when build isolation causes an environment-specific issue
+pip install -e ./epm --no-build-isolation</code></pre>
+        <p>Use local-only configuration templates for paths and secrets; these files must remain untracked. The source archive is an inspectable code snapshot. The runner commands below require a full EPM checkout containing <code>epm/scripts/run_episode_dashboard.py</code> and the referenced pipeline configurations.</p>
+        <pre><code># Create local-only configuration files from the supplied templates
+Copy-Item epm/configs/api_keys.local.example.json epm/configs/api_keys.local.json
+Copy-Item epm/configs/common.local.example.json epm/configs/common.local.json
+
+# Store a provider key only on the local machine; never commit its value
+setx YEYSAI_API_KEY "&lt;YOUR_API_KEY&gt;"
+# Open a new shell before checking it
+python -c "import os; v=os.environ.get('YEYSAI_API_KEY',''); print(bool(v), len(v))"
+
+# Optional email-notification setup: use a mail-app password, never a real value in config
+setx EPM_EMAIL_PASS "&lt;MAIL_APP_PASSWORD&gt;"
+python epm/test/smoke_email_notification.py</code></pre>
       </section>
 
       <section>
-        <h2>Episode execution and recovery</h2>
-        <p>The following commands illustrate the published runner interface. The accompanying anonymous code artifact should pin the exact configuration files, model identifiers, prompts, and evaluation revision used for a result.</p>
+        <h2>Command reference</h2>
+        <p>This section transcribes the environment guide's runner interfaces while replacing account-specific paths, repository URLs, API values, email credentials, collaborator assignments, and private run names with safe placeholders. The original private clone URL is intentionally omitted; use the public software package above for code inspection and the released full checkout for the runner interface.</p>
+        <h3>Code update and PowerShell environment</h3>
+        <pre><code># Update a previously cloned public EPM checkout
+git fetch origin
+git pull --ff-only
+pip install -e ./epm
+
+# If Conda is not available in a new PowerShell window
+conda init powershell
+conda --version
+# Optional, user-scoped execution-policy adjustment when profile scripts are blocked
+Set-ExecutionPolicy -Scope CurrentUser -ExecutionPolicy RemoteSigned -Force</code></pre>
+        <h3>Single episode and prompt ablation</h3>
         <pre><code># One dish with a selected agent configuration
 python epm/scripts/run_episode_dashboard.py \
   --config epm/configs/pipelines/planner_executor.json \
   --dish-id 1
 
-# Resume the most recent compatible run and refresh its memory state
+# CAP prompt-ablation batch (documented dish subset)
+python epm/scripts/run_episode_dashboard.py \
+  --config epm/configs/pipelines/cap.json \
+  --dish-range 27,52,98,23,34,137,125,111,101,26,65,112,84,29,40,58,74,73,47,35 \
+  --auto-chain --prompt-ablation no_action
+# Available profiles: full, no_body, no_perception_sup, no_strategy,
+# no_history, no_feedback, no_action</code></pre>
+        <h3>Resume, rollback, and batch execution</h3>
+        <pre><code># Resume the most recent compatible run and refresh its memory state
 python epm/scripts/run_episode_dashboard.py \
   --config epm/configs/pipelines/planner_executor.json \
-  --dish-id 1 --resume --refresh-memory
+  --dish-id 1 --resume --refresh-memory [--run-name &lt;RUN_NAME&gt;]
 
-# Run a specified batch sequentially
+# Resume a named run at an explicit step, or roll back relative to its current checkpoint
+python epm/scripts/run_episode_dashboard.py \
+  --config epm/configs/pipelines/react.json \
+  --resume --run-name &lt;RUN_NAME&gt; --resume-step-id 80
+python epm/scripts/run_episode_dashboard.py \
+  --config epm/configs/pipelines/react.json \
+  --resume --run-name &lt;RUN_NAME&gt; --rollback-steps 5
+
+# Batch runs
 python epm/scripts/run_episode_dashboard.py \
   --config epm/configs/pipelines/reflexion.json \
-  --dish-range 1-20,41-60 --auto-chain</code></pre>
-        <p>Each run should retain its trajectory, screenshots/logs, configuration snapshot, evaluation output, and timing information in its run directory. If an episode reaches the game evaluation interface but feedback was not recorded, capture the feedback with the released collection script and verify that the dish identifier matches the evaluated dish.</p>
+  --dish-range 1-20,41-60 --auto-chain
+python epm/scripts/run_episode_dashboard.py \
+  --config epm/configs/pipelines/reflexion.json \
+  --resume --refresh-memory --auto-chain --dish-range 1-131
+python epm/scripts/run_episode_dashboard.py \
+  --config epm/configs/pipelines/reflexion.json \
+  --dish-range 1-131 --auto-chain --planner-model gpt-5-mini
+python epm/scripts/run_episode_dashboard.py \
+  --config epm/configs/pipelines/planner_executor.json \
+  --dish-range 40,41,83,88 --resume --refresh-memory --auto-chain</code></pre>
+        <p>With <code>--resume --dish-range 40,41,83,88</code>, the runner first identifies the latest compatible run and then continues from that dish's position in the listed sequence; it does not unconditionally restart at dish 40.</p>
+        <h3>Restart and runtime overrides</h3>
+        <pre><code># Restart the game environment for a fresh scene when the evaluation UI is available
+python epm/scripts/run_episode_dashboard.py \
+  --config epm/configs/pipelines/planner_executor.json \
+  --dish-id 102 --restart-env
+
+# Override a nested runtime parameter for one invocation
+python epm/scripts/run_episode_dashboard.py \
+  --config epm/configs/pipelines/planner_executor.json \
+  --dish-id 1 --runtime.force_submit_step_threshold 300</code></pre>
+        <h3>Evaluation feedback capture</h3>
+        <pre><code># After manual submission opens the in-game evaluation UI, write feedback to the latest run
+# First set the script's userdata-root argument/path to the local game UserData directory.
+python ./epm/scripts/dump_recipe_feedback.py</code></pre>
+        <p>Before closing the evaluation UI, verify that the recorded dish name is correct. A run should retain its trajectory, configuration snapshot, runtime log, screenshots, score, and textual feedback such as <code>flavors</code>, <code>technique</code>, <code>temperature</code>, and <code>unwantedProducts</code>.</p>
       </section>
 
       <section>

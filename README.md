@@ -7,6 +7,16 @@ This directory is a self-contained static web page made from the supplied enviro
 - API keys, email credentials, mail-notification setup, and service endpoints;
 - obsolete binary versions and the third-party MelonLoader installer.
 
+## Public packages
+
+The `downloads/` folder contains three review-facing packages:
+
+- `cookbench-environment-integration.zip` — game-side integration binary and mapping files;
+- `cookbench-software-anonymous.zip` — source snapshot with credential-like strings redacted;
+- `cookbench-data-anonymous.zip` — data snapshot with Excel creator/last-editor metadata normalized to `Anonymous`.
+
+`downloads/SHA256SUMS.txt` records the exact package hashes.
+
 ## Local preview
 
 Open `index.html` in a browser. No build tool, server, analytics, or external stylesheet is required.

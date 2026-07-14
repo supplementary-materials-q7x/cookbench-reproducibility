@@ -70,14 +70,25 @@
           <thead><tr><th>Artifact</th><th>Availability / boundary</th></tr></thead>
           <tbody>
             <tr><td>Environment-integration package</td><td>Included on this page: the integration binary and name-mapping files needed for the documented game-side setup.</td></tr>
-            <tr><td>Benchmark code and experiment artifacts</td><td>Publish in the accompanying anonymous code artifact: task definitions, prompts, action interface, EPM/world-adapter code, evaluation scripts, and permitted logs.</td></tr>
+            <tr><td>Software package</td><td>Anonymous source snapshot with 129 Python/JSON files, including EPM components, planning modules, action skills, and configuration code. Credential-like literals have been redacted.</td></tr>
+            <tr><td>Data package</td><td>Anonymous data snapshot with 41 entries: recipe/task resources, navigation-map inputs, semantic map assets, and CookBench-IR spreadsheets. Excel author metadata has been normalized to <code>Anonymous</code>.</td></tr>
             <tr><td>Cooking Simulator and Food Network DLC</td><td>Commercial dependencies. Each reproducer obtains these separately from the official distributor; they are not redistributed here.</td></tr>
             <tr><td>Closed or hosted model APIs</td><td>External services. Reproduction requires the stated model identifier and access available to the reproducer; no API key is included or requested by this page.</td></tr>
           </tbody>
         </table>
         <p><a class="download" href="downloads/cookbench-environment-integration.zip">Download environment-integration capsule</a> <a class="download" href="integration-package/CS_CamDump.dll">Download CS_CamDump.dll directly</a></p>
-        <p><small>Integration version: <code>20260430.1906</code>. SHA-256 checksums are included in <code>SHA256SUMS.txt</code> inside the download.</small></p>
+        <p><a class="download" href="downloads/cookbench-software-anonymous.zip">Download anonymous software package</a> <a class="download" href="downloads/cookbench-data-anonymous.zip">Download anonymous data package</a></p>
+        <p><small>Integration version: <code>20260430.1906</code>. Public package hashes are listed in <a href="downloads/SHA256SUMS.txt">downloads/SHA256SUMS.txt</a>.</small></p>
         <p><small>The accompanying <a href="https://github.com/supplementary-materials-q7x/cookbench-reproducibility">public anonymous artifact repository</a> contains this reproducibility capsule. It intentionally contains no personal profile link, private URL, credential, or identifying commit history.</small></p>
+      </section>
+
+      <section>
+        <h2>Software and data contents</h2>
+        <div class="grid">
+          <article class="card"><h3>Software — 129 files</h3><p>Python source and JSON configuration covering the agent core, planner, memory and feedback modules, action interface, GUI actions, and reusable automated skills.</p></article>
+          <article class="card"><h3>Data — 41 entries</h3><p>Recipe decompositions, single- and multi-dish intent-recognition resources, navigation obstacle-map inputs, a semantic-map asset, and CookBench-IR task spreadsheets.</p></article>
+          <article class="card"><h3>Privacy sanitation</h3><p>The public source package has one credential-like literal replaced. All 28 Excel workbooks in the data package have creator and last-editor metadata set to <code>Anonymous</code>.</p></article>
+        </div>
       </section>
 
       <section>
